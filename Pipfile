@@ -7,6 +7,9 @@ name = "pypi"
 django = "*"
 djangorestframework = "*"
 djangorestframework-simplejwt = "*"
+channels = "*"
+channels-redis = "*"
+python-socketio = {extras = ["client"], version = "*"}
 
 [dev-packages]
 

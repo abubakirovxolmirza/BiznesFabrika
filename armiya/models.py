@@ -1,4 +1,6 @@
 from django.db import models
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 # from users.models import CustomUser
 # Create your models here.
     
@@ -17,12 +19,36 @@ class Tasks(models.Model):
     users = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE, related_name='armiya_tasks')
     status = models.CharField(max_length=200, choices=STATUS_CHOICES)
     
+    # def save(self, *args, **kwargs):
+    #     super().save(*args, **kwargs)
+    #     channel_layer = get_channel_layer()
+    #     async_to_sync(channel_layer.group_send)(
+    #         "tasks_group",
+    #         {
+    #             "type": "tasks_update",
+    #             "data": {
+    #                 "id": self.id,
+    #                 "name": self.name,
+    #                 "definition": self.definition,
+    #                 # "score": self.score,
+    #                 "start_time": self.start_time.isoformat(),
+    #                 "stop_time": self.stop_time.isoformat(),
+    #                 "status": self.status,
+    #             }
+    #         }
+    #     )
 
-class HistoryTasks(models.Model):
-    tasks_id = models.ForeignKey(Tasks, on_delete=models.CASCADE)
-    name = models.CharField(max_length=250)
-    ball = models.IntegerField()
-    definition = models.CharField(max_length=250)
+    # def delete(self, *args, **kwargs):
+    #     channel_layer = get_channel_layer()
+    #     async_to_sync(channel_layer.group_send)(
+    #         "tasks_group",
+    #         {
+    #             "type": "tasks_update",
+    #             "data": {"id": self.id, "deleted": True}
+    #         }
+    #     )
+    #     super().delete(*args, **kwargs)
+
     
 class Balls(models.Model):
     STATUS_CHOICES = [
@@ -34,6 +60,34 @@ class Balls(models.Model):
     ball = models.IntegerField()
     definition = models.CharField(max_length=250)
     tasks_id = models.ForeignKey(Tasks, on_delete=models.CASCADE)
+    
+    # def save(self, *args, **kwargs):
+    #     super().save(*args, **kwargs)
+    #     channel_layer = get_channel_layer()
+    #     async_to_sync(channel_layer.group_send)(
+    #         "balls_tasks_group",
+    #         {
+    #             "type": "balls_tasks_update",
+    #             "data": {
+    #                 "id": self.id,
+    #                 "status": self.status,
+    #                 "score": self.score,
+    #                 "definition": self.definition,
+    #                 "tasks_id": self.tasks_id.id,
+    #             }
+    #         }
+    #     )
+
+    # def delete(self, *args, **kwargs):
+    #     channel_layer = get_channel_layer()
+    #     async_to_sync(channel_layer.group_send)(
+    #         "balls_tasks_group",
+    #         {
+    #             "type": "balls_tasks_update",
+    #             "data": {"id": self.id, "deleted": True}
+    #         }
+    #     )
+    #     super().delete(*args, **kwargs)
     
     
     
@@ -48,7 +102,33 @@ class HistoryBalls(models.Model):
     definition = models.CharField(max_length=250)
     balls_id = models.ForeignKey(Balls, on_delete=models.CASCADE)
 
+    # def save(self, *args, **kwargs):
+    #     super().save(*args, **kwargs)
+    #     channel_layer = get_channel_layer()
+    #     async_to_sync(channel_layer.group_send)(
+    #         "history_balls_group",
+    #         {
+    #             "type": "history_balls_update",
+    #             "data": {
+    #                 "id": self.id,
+    #                 "status": self.status,
+    #                 "score": self.score,
+    #                 "definition": self.definition,
+    #                 "balls_id": self.balls_id.id,
+    #             }
+    #         }
+    #     )
 
+    # def delete(self, *args, **kwargs):
+    #     channel_layer = get_channel_layer()
+    #     async_to_sync(channel_layer.group_send)(
+    #         "history_balls_group",
+    #         {
+    #             "type": "history_balls_update",
+    #             "data": {"id": self.id, "deleted": True}
+    #         }
+    #     )
+    #     super().delete(*args, **kwargs)
     
     
 class Buyum(models.Model):
