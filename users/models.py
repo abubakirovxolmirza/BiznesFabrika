@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from armiya.models import HistoryBalls, Tasks
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 # Create your models here.
 
 class CustomUserManager(BaseUserManager):
@@ -51,9 +53,10 @@ class CustomUser(AbstractUser):
     age = models.IntegerField(blank=True, null=True)
     vab = models.ForeignKey(HistoryBalls, on_delete=models.CASCADE, blank=True, null=True)
     tasks = models.ForeignKey(Tasks, on_delete=models.CASCADE, blank=True, null=True)
-    reyting = models.CharField(max_length=250, blank=True, null=True)
+    reyting = models.FloatField(blank=True, null=True)
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, blank=True, null=True)
     role = models.CharField(max_length=50, choices=ROLES_CHOICES, blank=True, null=True)
+    group_id = models.ForeignKey('Group', on_delete=models.CASCADE, blank=True, null=True)
     permission = models.CharField(max_length=70, blank=True, null=True)
     history_tasks = models.CharField(max_length=50, blank=True, null=True)
     history_balls = models.CharField(max_length=70, blank=True, null=True)
@@ -72,4 +75,23 @@ class CustomUser(AbstractUser):
     def get_user_id(self):
         return self.id
         
-            
+class Group(models.Model):
+    ROLES_CHOICES = [
+    ('General', 'General'),
+    ('Mayor', 'Mayor'),
+    ('Captain', 'Captain'),
+    ('Leytenant', 'Leytenant'),
+    ('Serjant', 'Serjant'),
+    ('Kursant', 'Kursant'),
+    ('Saldat', 'Saldat'),
+
+]
+    
+    name = models.CharField(max_length=200, blank=True, null=True)
+    count = models.IntegerField(blank=True, null=True)
+    admin = models.CharField(max_length=200, choices=ROLES_CHOICES, blank=True, null=True)   
+    rate = models.FloatField(blank=True, null=True)
+    shiori = models.CharField(max_length=200, blank=True, null=True)
+    users = models.ManyToManyField('CustomUser', blank=True)     
+    
+    

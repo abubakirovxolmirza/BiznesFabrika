@@ -3,8 +3,7 @@ from .models import CustomUser
 from django.contrib.auth import authenticate
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import CustomUser
-
+from .models import CustomUser, Group
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
@@ -36,3 +35,8 @@ class CustomTokenObtainPairSerializer(serializers.Serializer):
             'role': user.get_role(),
             'user_id': user.id,
         }
+        
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = '__all__'
